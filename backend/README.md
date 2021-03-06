@@ -19,7 +19,17 @@ python setup.py sdist
 pip install dist/studypie-points-0.1.tar.gz
 ```
 
-3. 실행
+3. migrate
+```bash
+python manage.py migrate
+```
+
+4. 계정 생성
+```bash
+django-admin createsuperuser
+```
+
+4. 실행
 ```bash
 python manage.py runserver
 ```
