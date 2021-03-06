@@ -14,7 +14,7 @@ const AUTH_TOKEN = "apollo-token";
 
 // Http endpoint
 const httpEndpoint =
-  process.env.VUE_APP_GRAPHQL_HTTP || "http://localhost:8000/graphql";
+  process.env.VUE_APP_GRAPHQL_HTTP || "http://localhost:8000/graphql/";
 
 let httpLink = createUploadLink({
   uri: httpEndpoint,

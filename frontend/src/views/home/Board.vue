@@ -31,7 +31,10 @@
 
     <v-app app>
       <v-container fluid>
-        board
+        <post-table
+          v-if="boards.length !== 0"
+          :boardId="curBoardId"
+        ></post-table>
       </v-container>
     </v-app>
     <create-board-dialog
@@ -43,16 +46,19 @@
 <script>
 import gql from "graphql-tag";
 import CreateBoardDialog from "../../components/CreateBoardDialog.vue";
+import PostTable from "../../components/PostTable.vue";
 
 export default {
   name: "Home.Board",
 
   components: {
     CreateBoardDialog,
+    PostTable,
   },
 
   data() {
     return {
+      curBoardId: 0,
       boards: [],
       isCreateBoardDialogShown: false,
     };
@@ -72,9 +78,17 @@ export default {
     },
   },
 
+  watch: {
+    boards: function() {
+      if (this.curBoardId === 0 && this.boards.length !== 0) {
+        this.curBoardId = this.boards[0].id;
+      }
+    },
+  },
+
   methods: {
     onClickTargetBoard: function(boardId) {
-      console.log(boardId);
+      this.curBoardId = boardId;
     },
   },
 
@@ -84,6 +98,7 @@ export default {
     });
     this.$root.$on("setBoardList", (boards) => {
       this.boards = boards;
+      this.isCreateBoardDialogShown = false;
     });
   },
 };

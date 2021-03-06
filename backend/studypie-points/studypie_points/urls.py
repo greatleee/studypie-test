@@ -14,26 +14,12 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.http import HttpResponse
 from django.urls import path
-from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie
 from graphene_django.views import GraphQLView
 
-from apps.users.views import login_view, logout_view
 from studypie.schema import schema
-
-
-@ensure_csrf_cookie
-def get_csrf(request):
-    if (request.method == 'GET'):
-        return HttpResponse('Ok', status=200)
-    else:
-        return HttpResponse('Method not allowed', status=405)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('csrf/', get_csrf, name="csrf"),
-    path('login/', login_view, name='login'),
-    path('logout/', logout_view, name='logout'),
     path('graphql/', GraphQLView.as_view(graphiql=True, schema=schema)),
 ]

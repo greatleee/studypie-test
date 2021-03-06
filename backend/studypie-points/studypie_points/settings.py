@@ -37,17 +37,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'corsheaders',
-    'channels',
     'graphene_django',
-    'alarms',
     'points',
-    'apps.boards',
-    'apps.users',
 ]
 
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -57,7 +51,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'studypie.urls'
+ROOT_URLCONF = 'studypie_points.urls'
 
 TEMPLATES = [
     {
@@ -75,7 +69,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'studypie.wsgi.application'
+WSGI_APPLICATION = 'studypie_points.wsgi.application'
 
 
 # Database
@@ -127,16 +121,6 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-ASGI_APPLICATION = 'studypie.asgi.application'
-CHANNEL_LAYERS = {
-    'default': {
-        'BACKEND': 'channels.layers.InMemoryChannelLayer',
-    },
-}
-
-CORS_ALLOW_ALL_ORIGINS = True
-CORS_ALLOW_CREDENTIALS = True
-
 GRAPHENE = {
-    'SCHEMA': 'studypie.schema.schema',
+    'SCHEMA': 'studypie_points.schema.schema',
 }

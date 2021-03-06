@@ -1,0 +1,115 @@
+{% extends "admin/change_list.html" %}
+{% load static %}
+
+{% block extrahead %}
+{{ block.super }}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.css" integrity="sha512-/zs32ZEJh+/EO2N1b0PEdoA10JkdC3zJ8L5FTiQu82LR9S/rOQNfQN7U59U9BC12swNeRAz3HSzIL2vpp4fv3w==" crossorigin="anonymous" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.bundle.min.js" integrity="sha512-SuxO9djzjML6b9w9/I07IWnLnQhgyYVSpHZx0JV97kGBfTIsUYlWflyuW4ypnvhBrslz1yJ3R+S14fdCWmSmSA==" crossorigin="anonymous"></script>
+<script  type="text/javascript">
+document.addEventListener('DOMContentLoaded', () => {
+  const ctx = document.getElementById('pointIssuedChart').getContext('2d');
+
+  // Sample data
+  const chartData = {{ chart_data | safe }};
+
+  // Parse the dates to JS
+  chartData.forEach((d) => {
+    d.x = new Date(d.date);
+  });
+
+  // Render the chart
+  const chart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      datasets: [
+        {
+          label: '누적 발급 포인트',
+          data: chartData,
+          backgroundColor: 'rgba(220,20,20,0.5)',
+        },
+      ],
+    },
+    options: {
+      responsive: true,
+      scales: {
+        xAxes: [
+          {
+            type: 'time',
+            time: {
+              unit: 'day',
+              round: 'day',
+              displayFormats: {
+                day: 'YYYY MM D',
+              },
+            },
+          },
+        ],
+        yAxes: [
+          {
+            ticks: {
+              beginAtZero: true,
+            },
+          },
+        ],
+      },
+    },
+  });
+
+  const onClickSetViewUnit = async (event) => {
+    let res;
+    try {
+      res = await fetch(`/admin/points/pointissued/chart?unit=${event.path[0].id}`);
+    } catch (error) {
+      alert(error);
+    }
+    if (res.status !== 200) {
+      alert(`데이터를 볼러오는데 실패했습니다: ${res.status}`);
+    }
+    const json = await res.json();
+    json.forEach((d) => {
+      d.x = new Date(d.date);
+    });
+    chart.data.datasets[0].data = json;
+    chart.update();
+  };
+
+  document.getElementById('daily').onclick = onClickSetViewUnit;
+  document.getElementById('weekly').onclick = onClickSetViewUnit;
+  document.getElementById('monthly').onclick = onClickSetViewUnit;
+});
+</script>
+{% endblock %}
+
+<!-- Render the rest of the ChangeList view by calling block.super -->
+{% block content %}
+<style lang="css">
+.button-group-label {
+  margin-top: auto;
+  margin-bottom: auto;
+  margin-right: 17px;
+  font-size: 17px;
+}
+
+.mr-2 {
+  margin-right: 15px;
+}
+</style>
+<div style="margin-bottom: 70px;">
+  <div>
+    <a href="#" id="calendarlink0">
+      <span class="data-icon" title="Choose a Date"></span>
+    </a>
+  </div>
+  <div style="width: 100%;">
+    <canvas style="width: 50%; height: 100%;" id="pointIssuedChart"></canvas>
+  </div>
+  <div style="display: flex; margin-top: 10px;">
+    <div style="flex-grow: 1 !important;"></div>
+    <div class="button-group-label">통계 단위 설정: </div>
+    <button id="daily" class="button mr-2">Daily</button>
+    <button id="weekly" class="button mr-2">Weekly</button>
+    <button id="monthly" class="button mr-2">Monthly</button>
+  </div>
+</div>
+{{ block.super }}
+{% endblock %}

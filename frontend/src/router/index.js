@@ -18,6 +18,22 @@ const routes = [
         name: "Home.Board",
         component: () => import("../views/home/Board.vue"),
       },
+      {
+        path: "posts/:id",
+        name: "Home.Post",
+        component: () => import("../views/home/Post.vue"),
+        props: true,
+      },
+      {
+        path: "points",
+        name: "Home.Point",
+        component: () => import("../views/home/Point.vue"),
+      },
+      {
+        path: "alarms",
+        name: "Home.Alarm",
+        component: () => import("../views/home/Alarm.vue"),
+      },
     ],
   },
   {

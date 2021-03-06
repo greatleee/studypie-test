@@ -8,6 +8,9 @@ class Board(models.Model):
 
 
 class Post(models.Model):
+    class Meta:
+        ordering = ['-created_at']
+
     title = models.CharField(max_length=100)
     content = models.TextField()
     creator = models.ForeignKey(
@@ -27,6 +30,9 @@ class Post(models.Model):
 
 
 class Comment(models.Model):
+    class Meta:
+        ordering = ['-created_at']
+
     content = models.TextField()
     creator = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
